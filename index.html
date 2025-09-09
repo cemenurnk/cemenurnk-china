@@ -1,0 +1,655 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CEMENURNK - Centro de Medicina Nuclear y Radioterapia</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
+    <style>
+        body {
+            font-family: 'Inter', sans-serif;
+            color: #4A5568;
+            background-color: #F7FAFC;
+        }
+        .section-title {
+            font-size: 2.5rem;
+            font-weight: 700;
+            color: #1b3967;
+            border-bottom: 4px solid #0098ce;
+            display: inline-block;
+            padding-bottom: 0.5rem;
+            margin-bottom: 2rem;
+        }
+        .service-card {
+            transition: transform 0.3s ease-in-out;
+        }
+        .service-card:hover {
+            transform: translateY(-5px);
+        }
+
+        .service-card img{
+            width: 400px;
+            height: 250px;
+        }
+
+        .shadow-custom {
+            box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
+        }
+        #map iframe {
+            border-radius: 1rem;
+            width: 100%;
+            height: 400px;
+        }
+        .bg-primary {
+            background-color: #1b3967;
+        }
+        .text-primary {
+            color: #1b3967;
+        }
+        .bg-secondary {
+            background-color: #0098ce;
+        }
+        .text-secondary {
+            color: #0098ce;
+        }
+        /* Carousel specific styles */
+        .carousel-container {
+            position: relative;
+            overflow: hidden;
+            border-radius: 1rem;
+            box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
+        }
+        .carousel-item {
+            display: none;
+            width: 100%;
+            transition: opacity 0.5s ease-in-out;
+        }
+        .carousel-item.active {
+            display: block;
+            animation: fadein 0.8s;
+        }
+        @keyframes fadein {
+            from { opacity: 0; }
+            to   { opacity: 1; }
+        }
+        .carousel-dots {
+            position: absolute;
+            bottom: 1.5rem;
+            left: 50%;
+            transform: translateX(-50%);
+            display: flex;
+            gap: 0.75rem;
+        }
+        .carousel-dot {
+            width: 1rem;
+            height: 1rem;
+            background-color: rgba(255, 255, 255, 0.6);
+            border-radius: 50%;
+            cursor: pointer;
+            transition: background-color 0.3s ease;
+        }
+        .carousel-dot.active {
+            background-color: #0098ce;
+        }
+    </style>
+</head>
+<body class="antialiased">
+
+    <!-- Navigation Bar -->
+    <nav class="bg-white shadow-lg fixed top-0 left-0 right-0 z-50">
+        <div class="container mx-auto px-6 py-1 flex justify-between items-center">
+            <div class="flex items-center">
+                <img src="/media/IsoLogoTipo CMNRNK.png" alt="CEMENURNK Logo" class="h-20">
+            </div>
+            <div class="md:flex space-x-8">
+                <div class="hidden md:flex space-x-8 items-center">
+                    <a href="#quienes-somos" class="text-gray-600 hover:text-secondary transition duration-300" data-key="nav-about">Quiénes Somos</a>
+                    <a href="#servicios" class="text-gray-600 hover:text-secondary transition duration-300" data-key="nav-services">Servicios</a>
+                    <a href="#equipamiento" class="text-gray-600 hover:text-secondary transition duration-300" data-key="nav-equipment">Equipamiento</a>
+                    <a href="#representantes" class="text-gray-600 hover:text-secondary transition duration-300" data-key="nav-reps">Representantes</a>
+                    <a href="#contacto" class="text-gray-600 hover:text-secondary transition duration-300" data-key="nav-contact">Contacto</a>
+                </div>
+                <button id="lang-toggle" class="bg-gray-200 hover:bg-gray-300 text-gray-800 font-bold py-2 px-4 rounded-full text-lg">
+                    🇬🇧
+                </button>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Header Section -->
+    <header class="bg-gray-100 py-32 mt-16 rounded-b-3xl">
+        <div class="container mx-auto px-6 text-center">
+            <h1 class="text-5xl md:text-6xl font-extrabold text-gray-800 leading-tight mb-4" data-key="header-title">
+                CENTRO DE MEDICINA NUCLEAR Y RADIOTERAPIA
+            </h1>
+            <h2 class="text-xl md:text-2xl text-gray-600 font-semibold mb-8" data-key="header-subtitle">
+                "PDTE. DR. NÉSTOR C. KIRCHNER"
+            </h2>
+            <!-- Carousel Section -->
+            <div id="hero-carousel" class="carousel-container mx-auto w-full max-w-4xl mt-8 aspect-video">
+                <div class="carousel-inner">
+                    <!-- Images will be dynamically loaded here -->
+                </div>
+                <div class="carousel-dots">
+                    <!-- Dots will be dynamically generated here -->
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <!-- "Quiénes Somos" Section -->
+    <section id="quienes-somos" class="py-20 bg-white">
+        <div class="container mx-auto px-6">
+            <div class="text-center">
+                <h2 class="section-title" data-key="section-about-title">Quiénes Somos</h2>
+            </div>
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-12 items-center">
+                <div class="text-lg text-gray-600">
+                    <p class="mb-6 leading-relaxed" data-key="about-paragraph-1">
+                        Somos una <strong class="text-secondary">FUNDACIÓN</strong> sin fines de lucro dedicada a brindar asistencia en salud, con un enfoque principal en el diagnóstico y tratamiento oncológico, así como en diversas patologías.
+                    </p>
+                    <p class="leading-relaxed" data-key="about-paragraph-2">
+                        Nuestra institución cuenta con recursos humanos altamente especializados y una infraestructura única en la región, lo que nos permite ofrecer tratamientos de radioterapia, servicios de diagnóstico por imágenes, y un espacio dedicado al bienestar y la calidad de vida.
+                    </p>
+                </div>
+                <div>
+                    <img src="/media/equipo1.png" alt="Equipo Médico" class="rounded-xl shadow-lg border border-gray-200">
+                </div>
+            </div>
+            <div class="mt-12 text-center text-lg text-gray-600">
+                <h3 class="text-2xl font-bold text-gray-700 mb-4" data-key="about-mission-vision-title">Nuestra Misión y Visión</h3>
+                <p class="mb-4" data-key="about-mission">
+                    <strong class="text-secondary">Misión:</strong> Brindar servicios de excelencia en el cuidado de la salud a toda la comunidad, acompañando al paciente y su familia, buscando asegurar la equidad y accesibilidad.
+                </p>
+                <p data-key="about-vision">
+                    <strong class="text-secondary">Visión:</strong> Ser una institución de referencia a nivel nacional e internacional en cuidados de la salud, investigación y desarrollo, reconocida por la calidad y excelencia de sus servicios.
+                </p>
+            </div>
+        </div>
+    </section>
+
+    <!-- "Servicios" Section -->
+    <section id="servicios" class="py-20 bg-gray-100">
+        <div class="container mx-auto px-6">
+            <div class="text-center">
+                <h2 class="section-title" data-key="section-services-title">Nuestros Servicios</h2>
+                <p class="text-lg text-gray-600 mb-12" data-key="services-intro">Ofrecemos una amplia variedad de servicios especializados para brindar una atención integral.</p>
+            </div>
+            
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+                <!-- Radioterapia Card -->
+                <div class="service-card bg-white p-8 rounded-xl shadow-lg border border-gray-200">
+                    <h3 class="text-xl font-bold text-gray-800 mb-4" data-key="service-radiotherapy-title">Radioterapia</h3>
+                    <p class="text-gray-600 mb-4" data-key="service-radiotherapy-text">Ofrecemos Teleterapia (Externa) con aceleradores lineales y Braquiterapia (Interna) de alta tasa de dosis.</p>
+                    <img src="/media/radioterapia.png" alt="Radioterapia" class="rounded-xl shadow-sm mt-4">
+                </div>
+                <!-- Diagnóstico por Imágenes Card -->
+                <div class="service-card bg-white p-8 rounded-xl shadow-lg border border-gray-200">
+                    <h3 class="text-xl font-bold text-gray-800 mb-4" data-key="service-imaging-title">Diagnóstico por Imágenes</h3>
+                    <p class="text-gray-600 mb-4" data-key="service-imaging-text">Servicios de PET-CT, Tomografía, Diagnóstico Mamario, y Ecografía General y Doppler con tecnología de punta.</p>
+                    <img src="/media/tomo3.png" alt="Tomografía" class="rounded-xl shadow-sm mt-4">
+                </div>
+                <!-- Oncología Card -->
+                <div class="service-card bg-white p-8 rounded-xl shadow-lg border border-gray-200">
+                    <h3 class="text-xl font-bold text-gray-800 mb-4" data-key="service-oncology-title">Servicio de Oncología</h3>
+                    <p class="text-gray-600 mb-4" data-key="service-oncology-text">Atención oncológica integral y personalizada, abarcando desde el diagnóstico, la planificación del tratamiento y la administración de terapias.</p>
+                    <img src="/media/onco1.png" alt="Servicio de Oncología" class="rounded-xl shadow-sm mt-4">
+                </div>
+                <!-- CEMENURNK Mujer Card -->
+                <div class="service-card bg-white p-8 rounded-xl shadow-lg border border-gray-200">
+                    <h3 class="text-xl font-bold text-gray-800 mb-4" data-key="service-woman-title">CEMENURNK Mujer</h3>
+                    <p class="text-gray-600 mb-4" data-key="service-woman-text">Un espacio exclusivo para controles gineco-mamarios integrales, con atención médica y estudios diagnósticos en un solo lugar.</p>
+                    <img src="/media/mamografia.png" alt="CEMENURNK Mujer" class="rounded-xl shadow-sm mt-4">
+                </div>
+                <!-- Bienestar y Calidad de Vida Card -->
+                <div class="service-card bg-white p-8 rounded-xl shadow-lg border border-gray-200">
+                    <h3 class="text-xl font-bold text-gray-800 mb-4" data-key="service-wellbeing-title">Bienestar y Calidad de Vida</h3>
+                    <p class="text-gray-600 mb-4" data-key="service-wellbeing-text">Acompañamiento psicológico y nutricional para pacientes y sus familias, con actividades terapéuticas y talleres.</p>
+                    <img src="/media/bycv2.png" alt="Clase de Yoga" class="rounded-xl shadow-sm mt-4">
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- "Equipamiento Médico" Section -->
+    <section id="equipamiento" class="py-20 bg-gray-100">
+        <div class="container mx-auto px-6">
+            <div class="text-center">
+                <h2 class="section-title" data-key="section-equipment-title">Equipamiento Médico</h2>
+                <p class="text-lg text-gray-600 mb-12" data-key="equipment-intro">Contamos con tecnología de vanguardia para brindar la mejor atención.</p>
+            </div>
+            
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+                <!-- Acelerador Elekta VERSA HD -->
+                <div class="service-card bg-white p-8 rounded-xl shadow-lg border border-gray-200">
+                    <h3 class="text-xl font-bold text-gray-800 mb-4" data-key="equipment-versa-title">Acelerador Elekta VERSA HD</h3>
+                    <p class="text-gray-600 mb-4" data-key="equipment-versa-text">Integra sistemas de imagen guiada y energía FFF para tratamientos de alta precisión y menor duración.</p>
+                    <ul class="list-disc list-inside text-sm text-gray-600 space-y-1">
+                        <li data-key="versa-li-1">Energía de fotones: 6 y 10 Mv.</li>
+                        <li data-key="versa-li-2">Energía de electrones: 6, 9, 12, 15 Mev.</li>
+                        <li data-key="versa-li-3">Colimador multilaminar de 160 láminas.</li>
+                        <li data-key="versa-li-4">Sistemas de planificación y gerenciamiento de pacientes.</li>
+                    </ul>
+                    <img src="/media/versa.jpg" alt="Acelerador Elekta VERSA HD" class="rounded-xl shadow-sm mt-4">
+                </div>
+                
+                <!-- Acelerador Elekta SYNERGY PLATFORM -->
+                <div class="service-card bg-white p-8 rounded-xl shadow-lg border border-gray-200">
+                    <h3 class="text-xl font-bold text-gray-800 mb-4" data-key="equipment-synergy-title">Acelerador Elekta SYNERGY PLATFORM</h3>
+                    <p class="text-gray-600 mb-4" data-key="equipment-synergy-text">Equipo optimizado para un posicionamiento preciso y verificaciones en tiempo real durante la sesión.</p>
+                    <ul class="list-disc list-inside text-sm text-gray-600 space-y-1">
+                        <li data-key="synergy-li-1">Kit Agility con 160 láminas de conformación.</li>
+                        <li data-key="synergy-li-2">Sistema de planificación Mónaco.</li>
+                        <li data-key="synergy-li-3">Sistema de gerenciamiento Mosaiq.</li>
+                        <li data-key="synergy-li-4">Energía de fotones: 6 MV.</li>
+                    </ul>
+                    <img src="/media/synergy.jpg" alt="Acelerador Elekta SYNERGY PLATFORM" class="rounded-xl shadow-sm mt-4">
+                </div>
+
+                <!-- Afterloader Multisource Eckert & Ziegler BEBIG -->
+                <div class="service-card bg-white p-8 rounded-xl shadow-lg border border-gray-200">
+                    <h3 class="text-xl font-bold text-gray-800 mb-4" data-key="equipment-brachytherapy-title">Braquiterapia: Afterloader</h3>
+                    <p class="text-gray-600 mb-4" data-key="equipment-brachytherapy-text">Equipo de última generación para braquiterapia de alta tasa de dosis (HDR) con fuente de Cobalto-60.</p>
+                    <ul class="list-disc list-inside text-sm text-gray-600 space-y-1">
+                        <li data-key="brachy-li-1">Braquiterapia de alta tasa de dosis (HDR).</li>
+                        <li data-key="brachy-li-2">Equipo de 20 canales y fuente de Cobalto-60.</li>
+                        <li data-key="brachy-li-3">Tomógrafo Computado, Arco en C y Ecógrafo integrados.</li>
+                    </ul>
+                    <img src="/media/afterloader.jpg" alt="Afterloader Multisource Eckert & Ziegler BEBIG" class="rounded-xl shadow-sm mt-4">
+                </div>
+
+                <!-- PET-CT General Electric DISCOVERY 610 -->
+                <div class="service-card bg-white p-8 rounded-xl shadow-lg border border-gray-200">
+                    <h3 class="text-xl font-bold text-gray-800 mb-4" data-key="equipment-pet-ct-title">PET-CT General Electric DISCOVERY 610</h3>
+                    <p class="text-gray-600 mb-4" data-key="equipment-pet-ct-text">Equipo híbrido que ofrece imágenes de alta sensibilidad y especificidad para un diagnóstico preciso.</p>
+                    <ul class="list-disc list-inside text-sm text-gray-600 space-y-1">
+                        <li data-key="pet-ct-li-1">Multislice helicoidal de 16 cortes.</li>
+                        <li data-key="pet-ct-li-2">Bomba inyectora de contraste.</li>
+                        <li data-key="pet-ct-li-3">Túnel amplio de 70 cm y soporte de hasta 180 kg.</li>
+                    </ul>
+                    <img src="/media/pet.JPG" alt="PET-CT General Electric DISCOVERY 610" class="rounded-xl shadow-sm mt-4">
+                </div>
+
+                <!-- Mamógrafo General Electric Senographe Pristina -->
+                <div class="service-card bg-white p-8 rounded-xl shadow-lg border border-gray-200">
+                    <h3 class="text-xl font-bold text-gray-800 mb-4" data-key="equipment-mammograph-title">Mamógrafo GE Senographe Pristina</h3>
+                    <p class="text-gray-600 mb-4" data-key="equipment-mammograph-text">El modelo de marco estereotáctico más avanzado para estudios seguros y precisos.</p>
+                    <ul class="list-disc list-inside text-sm text-gray-600 space-y-1">
+                        <li data-key="mammo-li-1">Calidad de imagen de la mejor resolución del país.</li>
+                        <li data-key="mammo-li-2">Accesible para silla de ruedas.</li>
+                        <li data-key="mammo-li-3">Permite biopsia de mama asistida por sistema de vacío.</li>
+                        <li data-key="mammo-li-4">Calidad de imagen de la mejor resolución del país.</li>
+                    </ul>
+                    <img src="/media/Mamografo 1.jpeg" alt="Mamógrafo General Electric Senographe Pristina" class="rounded-xl shadow-sm mt-4">
+                </div>
+
+                <!-- Tomógrafo General Electric Discovery Ct590 Rt -->
+                <div class="service-card bg-white p-8 rounded-xl shadow-lg border border-gray-200">
+                    <h3 class="text-xl font-bold text-gray-800 mb-4" data-key="equipment-ct-title">Tomógrafo GE Discovery Ct590 Rt</h3>
+                    <p class="text-gray-600 mb-4" data-key="equipment-ct-text">Tomografía helicoidal multicorte, fundamental para diagnósticos precisos y planificación de radioterapia.</p>
+                    <ul class="list-disc list-inside text-sm text-gray-600 space-y-1">
+                        <li data-key="ct-li-1">Reconstrucción Iterativa ASIR para reducción de dosis.</li>
+                        <li data-key="ct-li-2">Software MAR para reducción de artefactos metálicos.</li>
+                        <li data-key="ct-li-3">Túnel amplio de 80 cm y soporte de hasta 200 kg.</li>
+                    </ul>
+                    <img src="/media/Tomografo 2.jpeg" alt="Tomógrafo General Electric Discovery Ct590 Rt" class="rounded-xl shadow-sm mt-4">
+                </div>
+
+                 <!-- Ecógrafo Arletta 65 Hitachi -->
+                 <div class="service-card bg-white p-8 rounded-xl shadow-lg border border-gray-200">
+                    <h3 class="text-xl font-bold text-gray-800 mb-4" data-key="equipment-echograph-title">Ecógrafo Arletta 65 Hitachi</h3>
+                    <p class="text-gray-600 mb-4" data-key="equipment-echograph-text">Equipo que proporciona un diagnóstico rápido y una excelente obtención de imágenes para diversas especialidades.</p>
+                    <ul class="list-disc list-inside text-sm text-gray-600 space-y-1">
+                        <li data-key="echo-li-1">Diseño ergonómico que reduce la fatiga del profesional.</li>
+                        <li data-key="echo-li-2">Variedad de sondas para diferentes exploraciones.</li>
+                        <li data-key="echo-li-3">Ideal para ginecología, obstetricia, tiroides y más.</li>
+                    </ul>
+                    <img src="/media/ecografo.png" alt="Ecógrafo Arletta 65 Hitachi" class="rounded-xl shadow-sm mt-4">
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- "Ciclotrón" Section (new, separate section) -->
+    <section id="ciclotron" class="py-20 bg-white">
+        <div class="container mx-auto px-6">
+            <div class="text-center">
+                <h2 class="section-title" data-key="section-cyclotron-title">Ciclotrón</h2>
+                <p class="text-lg font-semibold text-gray-700 mb-4" data-key="equipment-cyclotron-subtitle">Healthcare PETracer 810</p>
+            </div>
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-12 items-center">
+                <div class="text-lg text-gray-600 text-justify">
+                    <p class="mb-4 leading-relaxed" data-key="equipment-cyclotron-text">La serie PETtrace 800 de GE Healthcare constituye un sistema ciclotrón compacto y automatizado de doble partícula, diseñado específicamente para la producción de radiofármacos utilizados en tomografía por emisión de positrones (PET). El núcleo del PETtrace 800 está basado en un ciclotrón de iones negativos con plano medio vertical y diseño comprobado, capaz de acelerar protones y deuterones. Esta característica proporciona versatilidad operativa y favorece la producción a bajo costo de múltiples isótopos. El sistema permite integrar distintos blancos y módulos de síntesis, lo que amplía el espectro de radioisótopos accesibles para aplicaciones clínicas y de investigación.Entre los isótopos que pueden obtenerse destacan el oxígeno-15, nitrógeno-13, carbono-11 y flúor-18, junto con diversos radionúclidos de blancos sólidos. Una vez producidos, los isótopos son transferidos automáticamente a los sistemas de síntesis química, donde se convierten de manera en trazadores PET y precursores farmacéuticos listos para su aplicación. Este nivel de integración asegura reproducibilidad, seguridad y trazabilidad en toda la cadena de producción radiofarmacéutica.</p>
+                </div>
+                <div>
+                    <img src="/media/ciclotron.jpg" alt="Ciclotrón" class="rounded-xl shadow-lg border border-gray-200">
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- "Representantes" Section -->
+    <section id="representantes" class="py-20 bg-gray-100">
+        <div class="container mx-auto px-6">
+            <div class="text-center">
+                <h2 class="section-title" data-key="section-reps-title">Representantes</h2>
+                <p class="text-lg text-gray-600 mb-12" data-key="reps-intro">Conoce a nuestro equipo de representantes, dedicados a la excelencia.</p>
+            </div>
+            
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
+                <!-- Martin Mutuberria Card -->
+                <div class="bg-white p-8 rounded-xl shadow-lg border border-gray-200 text-center">
+                    <img src="/media/mmutuberria.png" alt="Martín Mutuberria" class="rounded-full w-48 h-48 mx-auto mb-4">
+                    <h3 class="text-xl font-bold text-gray-800 mb-1" data-key="rep-martin-name">Martín Mutuberria</h3>
+                    <p class="text-secondary font-semibold" data-key="rep-martin-role">Gerente General</p>
+                    <a href="mailto:martin.m@cemenurnk.org" class="text-gray-500 hover:text-secondary transition duration-300">mmutuberria@cemenurnk.org.ar</a>
+                </div>
+                
+                <!-- Gabriel Martinez Card -->
+                <div class="bg-white p-8 rounded-xl shadow-lg border border-gray-200 text-center">
+                    <img src="/media/gmartinez.png" alt="Gabriel Martinez" class="rounded-full w-48 h-48 mx-auto mb-4">
+                    <h3 class="text-xl font-bold text-gray-800 mb-1" data-key="rep-gabriel-name">Gabriel Martinez</h3>
+                    <p class="text-secondary font-semibold" data-key="rep-gabriel-role">Ingeniero Civil</p>
+                    <a href="mailto:gabriel.m@cemenurnk.org" class="text-gray-500 hover:text-secondary transition duration-300">gmartinez@cemenurnk.org.ar</a>
+                </div>
+                
+                <!-- Lucas Dordolo Card -->
+                <div class="bg-white p-8 rounded-xl shadow-lg border border-gray-200 text-center">
+                    <img src="/media/ldordolo.png" alt="Lucas Dordolo" class="rounded-full w-48 h-48 mx-auto mb-4">
+                    <h3 class="text-xl font-bold text-gray-800 mb-1" data-key="rep-lucas-name">Lucas Dordolo</h3>
+                    <p class="text-secondary font-semibold" data-key="rep-lucas-role">Ingeniero Electrónico</p>
+                    <a href="mailto:lucas.d@cemenurnk.org" class="text-gray-500 hover:text-secondary transition duration-300">ldordolo@cemenurnk.org.ar</a>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- "Contacto" Section -->
+    <section id="contacto" class="py-20 bg-white">
+        <div class="container mx-auto px-6">
+            <div class="text-center">
+                <h2 class="section-title" data-key="section-contact-title">Contacto</h2>
+                <p class="text-lg text-gray-600 mb-12" data-key="contact-intro">Estamos aquí para ayudarte. Ponte en contacto con nosotros.</p>
+            </div>
+            
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-12">
+                <div class="space-y-6 text-gray-700">
+                    <div>
+                        <h4 class="font-bold text-xl text-gray-800 mb-2" data-key="contact-phones-title">Teléfonos:</h4>
+                        <ul class="list-none space-y-2">
+                            <li><strong class="font-semibold" data-key="contact-general-label">General:</strong> +54 9 3704 456566</li>
+                        </ul>
+                    </div>
+                    <div>
+                        <h4 class="font-bold text-xl text-gray-800 mb-2" data-key="contact-email-title">Correo Electrónico:</h4>
+                        <p data-key="contact-email-text">contacto@cemenurnk.org.ar</p>
+                    </div>
+                    <div>
+                        <h4 class="font-bold text-xl text-gray-800 mb-2" data-key="contact-address-title">Dirección:</h4>
+                        <p data-key="contact-address-text">Corrientes 1849, Formosa Capital, Argentina</p>
+                    </div>
+                    <div>
+                        <h4 class="font-bold text-xl text-gray-800 mb-2" data-key="contact-web-title">Página Web:</h4>
+                        <p><a href="https://www.cemenurnk.org.ar" class="text-secondary hover:underline" data-key="contact-web-text">www.cemenurnk.org.ar</a></p>
+                    </div>
+                </div>
+                
+                <div id="map" class="shadow-custom rounded-xl overflow-hidden">
+                     <iframe data-key="map-src"
+                        allowfullscreen="" 
+                        loading="lazy" 
+                        referrerpolicy="no-referrer-when-downgrade">
+                    </iframe>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="bg-primary text-white py-6 mt-12 rounded-t-3xl">
+        <div class="container mx-auto px-6 text-center text-sm">
+            <p data-key="footer-text">&copy; 2024 CEMENURNK. Todos los derechos reservados.</p>
+        </div>
+    </footer>
+    
+    <script>
+        const translations = {
+            'nav-about': { es: 'Quiénes Somos', zh: '谁是我们', en: 'About Us' },
+            'nav-services': { es: 'Servicios', zh: '服务', en: 'Services' },
+            'nav-equipment': { es: 'Equipamiento', zh: '设备', en: 'Equipment' },
+            'nav-reps': { es: 'Representantes', zh: '代表', en: 'Representatives' },
+            'nav-contact': { es: 'Contacto', zh: '联系', en: 'Contact' },
+            'header-title': { es: 'CENTRO DE MEDICINA NUCLEAR Y RADIOTERAPIA', zh: '核医学与放射治疗中心', en: 'CENTER FOR NUCLEAR MEDICINE AND RADIOTHERAPY' },
+            'header-subtitle': { es: '"PDTE. DR. NÉSTOR C. KIRCHNER"', zh: '“总统 内斯托尔·C·基什内尔”', en: '"PRES. DR. NÉSTOR C. KIRCHNER"' },
+            'section-about-title': { es: 'Quiénes Somos', zh: '谁是我们', en: 'About Us' },
+            'about-paragraph-1': { es: 'Somos una <strong class="text-secondary">FUNDACIÓN</strong> sin fines de lucro dedicada a brindar asistencia en salud, con un enfoque principal en el diagnóstico y tratamiento oncológico, así como en diversas patologías.', zh: '我们是一家非营利性基金会，致力于提供健康服务，主要关注肿瘤诊断和治疗，以及各种疾病。', en: 'We are a non-profit <strong class="text-secondary">FOUNDATION</strong> dedicated to providing health assistance, with a primary focus on oncological diagnosis and treatment, as well as various pathologies.' },
+            'about-paragraph-2': { es: 'Nuestra institución cuenta con recursos humanos altamente especializados y una infraestructura única en la región, lo que nos permite ofrecer tratamientos de radioterapia, servicios de diagnóstico por imágenes, y un espacio dedicado al bienestar y la calidad de vida.', zh: '我们的机构拥有高度专业化的员工和该地区独特的设施，使我们能够提供放射治疗、影像诊断服务以及一个专注于福祉和生活质量的空间。', en: 'Our institution has highly specialized human resources and a unique infrastructure in the region, allowing us to offer radiotherapy treatments, diagnostic imaging services, and a space dedicated to well-being and quality of life.' },
+            'about-mission-vision-title': { es: 'Nuestra Misión y Visión', zh: '我们的使命与愿景', en: 'Our Mission and Vision' },
+            'about-mission': { es: '<strong class="text-secondary">Misión:</strong> Brindar servicios de excelencia en el cuidado de la salud a toda la comunidad, acompañando al paciente y su familia, buscando asegurar la equidad y accesibilidad.', zh: '<strong class="text-secondary">使命:</strong> 为整个社区提供卓越的医疗服务，陪伴患者及其家人，努力确保公平和可及性。', en: '<strong class="text-secondary">Mission:</strong> To provide excellent healthcare services to the entire community, accompanying the patient and their family, and seeking to ensure equity and accessibility.' },
+            'about-vision': { es: '<strong class="text-secondary">Visión:</strong> Ser una institución de referencia a nivel nacional e internacional en cuidados de la salud, investigación y desarrollo, reconocida por la calidad y excelencia de sus servicios.', zh: '<strong class="text-secondary">愿景:</strong> 成为在医疗保健、研究和发展方面，以其服务质量和卓越性而闻名的国家和国际级机构。', en: '<strong class="text-secondary">Vision:</strong> To be a leading institution at a national and international level in healthcare, research, and development, recognized for the quality and excellence of its services.' },
+            'section-services-title': { es: 'Nuestros Servicios', zh: '我们的服务', en: 'Our Services' },
+            'services-intro': { es: 'Ofrecemos una amplia variedad de servicios especializados para brindar una atención integral.', zh: '我们提供广泛的专业服务，以提供全面的护理。', en: 'We offer a wide variety of specialized services to provide comprehensive care.' },
+            'service-radiotherapy-title': { es: 'Radioterapia', zh: '放射治疗', en: 'Radiotherapy' },
+            'service-radiotherapy-text': { es: 'Ofrecemos Teleterapia (Externa) con aceleradores lineales y Braquiterapia (Interna) de alta tasa de dosis.', zh: '我们提供线性加速器远距治疗（外部）和高剂量率近距治疗（内部）。', en: 'We offer Teletherapy (External) with linear accelerators and high-dose-rate Brachytherapy (Internal).' },
+            'service-imaging-title': { es: 'Diagnóstico por Imágenes', zh: '影像诊断', en: 'Diagnostic Imaging' },
+            'service-imaging-text': { es: 'Servicios de PET-CT, Tomografía, Diagnóstico Mamario, y Ecografía General y Doppler con tecnología de punta.', zh: '提供PET-CT、断层扫描、乳房诊断以及最先进的普通和多普勒超声服务。', en: 'PET-CT, Tomography, Breast Diagnosis, and General and Doppler Ultrasound services with state-of-the-art technology.' },
+            'service-oncology-title': { es: 'Servicio de Oncología', zh: '肿瘤科服务', en: 'Oncology Service' },
+            'service-oncology-text': { es: 'Atención oncológica integral y personalizada, abarcando desde el diagnóstico, la planificación del tratamiento y la administración de terapias.', zh: '全面的个性化肿瘤护理，涵盖诊断、治疗计划和治疗管理。', en: 'Comprehensive and personalized oncological care, covering diagnosis, treatment planning, and therapy administration.' },
+            'service-woman-title': { es: 'CEMENURNK Mujer', zh: 'CEMENURNK 女士专区', en: 'CEMENURNK for Women' },
+            'service-woman-text': { es: 'Un espacio exclusivo para controles gineco-mamarios integrales, con atención médica y estudios diagnósticos en un solo lugar.', zh: '一个专为全面妇科和乳腺检查而设的专属空间，在一个地方提供医疗护理和诊断研究。', en: 'An exclusive space for comprehensive gynecological and breast check-ups, with medical care and diagnostic studies in one place.' },
+            'service-wellbeing-title': { es: 'Bienestar y Calidad de Vida', zh: '健康与生活质量', en: 'Well-being and Quality of Life' },
+            'service-wellbeing-text': { es: 'Acompañamiento psicológico y nutricional para pacientes y sus familias, con actividades terapéuticas y talleres.', zh: '为患者及其家人提供心理和营养支持，并举办治疗活动和研讨会。', en: 'Psychological and nutritional support for patients and their families, with therapeutic activities and workshops.' },
+            'section-equipment-title': { es: 'Equipamiento Médico', zh: '医疗设备', en: 'Medical Equipment' },
+            'equipment-intro': { es: 'Contamos con tecnología de vanguardia para brindar la mejor atención.', zh: '我们拥有尖端技术，提供最佳护理。', en: 'We have cutting-edge technology to provide the best care.' },
+            'equipment-versa-title': { es: 'Acelerador Elekta VERSA HD', zh: 'Elekta VERSA HD 加速器', en: 'Elekta VERSA HD Accelerator' },
+            'equipment-versa-text': { es: 'Integra sistemas de imagen guiada y energía FFF para tratamientos de alta precisión y menor duración.', zh: '集成了图像引导系统和FFF能量，用于高精度和短时治疗。', en: 'Integrates image-guided systems and FFF energy for high-precision and shorter-duration treatments.' },
+            'versa-li-1': { es: 'Energía de fotones: 6 y 10 Mv.', zh: '光子能量：6 和 10 Mv。', en: 'Photon energy: 6 and 10 Mv.' },
+            'versa-li-2': { es: 'Energía de electrones: 6, 9, 12, 15 Mev.', zh: '电子能量：6、9、12、15 Mev。', en: 'Electron energy: 6, 9, 12, 15 Mev.' },
+            'versa-li-3': { es: 'Colimador multilaminar de 160 láminas.', zh: '多叶准直器，160 个叶片。', en: '160-leaf multi-leaf collimator.' },
+            'versa-li-4': { es: 'Sistemas de planificación y gerenciamiento de pacientes.', zh: '计划和患者管理系统。', en: 'Patient planning and management systems.' },
+            'equipment-synergy-title': { es: 'Acelerador Elekta SYNERGY PLATFORM', zh: 'Elekta SYNERGY PLATFORM 加速器', en: 'Elekta SYNERGY PLATFORM Accelerator' },
+            'equipment-synergy-text': { es: 'Equipo optimizado para un posicionamiento preciso y verificaciones en tiempo real durante la sesión.', zh: '经过优化的设备，可在治疗期间进行精确的定位和实时验证。', en: 'Equipment optimized for precise positioning and real-time verification during the session.' },
+            'synergy-li-1': { es: 'Kit Agility con 160 láminas de conformación.', zh: 'Agility 套件，带有 160 个成形叶片。', en: 'Agility Kit with 160 conforming leaves.' },
+            'synergy-li-2': { es: 'Sistema de planificación Mónaco.', zh: 'Mónaco 计划系统。', en: 'Monaco planning system.' },
+            'synergy-li-3': { es: 'Sistema de gerenciamiento Mosaiq.', zh: 'Mosaiq 管理系统。', en: 'Mosaiq management system.' },
+            'synergy-li-4': { es: 'Energía de fotones: 6 MV.', zh: '光子能量：6 MV。', en: 'Photon energy: 6 MV.' },
+            'equipment-brachytherapy-title': { es: 'Braquiterapia: Afterloader', zh: '近距治疗：后装机', en: 'Brachytherapy: Afterloader' },
+            'equipment-brachytherapy-text': { es: 'Equipo de última generación para braquiterapia de alta tasa de dosis (HDR) con fuente de Cobalto-60.', zh: '最新一代设备，用于高剂量率（HDR）近距治疗，使用钴-60源。', en: 'State-of-the-art equipment for high-dose-rate (HDR) brachytherapy with a Cobalt-60 source.' },
+            'brachy-li-1': { es: 'Braquiterapia de alta tasa de dosis (HDR).', zh: '高剂量率（HDR）近距治疗。', en: 'High-dose-rate (HDR) brachytherapy.' },
+            'brachy-li-2': { es: 'Equipo de 20 canales y fuente de Cobalto-60.', zh: '20 通道设备，带钴-60源。', en: '20-channel equipment with a Cobalt-60 source.' },
+            'brachy-li-3': { es: 'Tomógrafo Computado, Arco en C y Ecógrafo integrados.', zh: '集成了CT扫描仪、C形臂和超声波。', en: 'Integrated Computed Tomograph, C-Arm, and Echograph.' },
+            'equipment-pet-ct-title': { es: 'PET-CT General Electric DISCOVERY 610', zh: '通用电气 DISCOVERY 610 PET-CT', en: 'GE DISCOVERY 610 PET-CT' },
+            'equipment-pet-ct-text': { es: 'Equipo híbrido que ofrece imágenes de alta sensibilidad y especificidad para un diagnóstico preciso.', zh: '混合设备，提供高灵敏度和特异性的图像，以进行精确诊断。', en: 'Hybrid equipment that offers highly sensitive and specific images for accurate diagnosis.' },
+            'pet-ct-li-1': { es: 'Multislice helicoidal de 16 cortes.', zh: '16 层螺旋多层扫描。', en: '16-slice helical multislice.' },
+            'pet-ct-li-2': { es: 'Bomba inyectora de contraste.', zh: '对比剂注射泵。', en: 'Contrast injection pump.' },
+            'pet-ct-li-3': { es: 'Túnel amplio de 70 cm y soporte de hasta 180 kg.', zh: '70 厘米宽的隧道，支持高达 200 公斤的重量。', en: 'Wide 70 cm tunnel and support for up to 200 kg.' },
+            'equipment-mammograph-title': { es: 'Mamógrafo GE Senographe Pristina', zh: '通用电气 Senographe Pristina 乳腺机', en: 'GE Senographe Pristina Mammograph' },
+            'equipment-mammograph-text': { es: 'El modelo de marco estereotáctico más avanzado para estudios seguros y precisos.', zh: '最先进的立体定位框架模型，用于安全和精确的研究。', en: 'The most advanced stereotactic frame model for safe and precise studies.' },
+            'mammo-li-1': { es: 'Calidad de imagen de la mejor resolución del país.', zh: '全国最高分辨率的图像质量。', en: 'Image quality with the highest resolution in the country.' },
+            'mammo-li-2': { es: 'Accesible para silla de ruedas.', zh: '轮椅可通行。', en: 'Accessible for wheelchairs.' },
+            'mammo-li-3': { es: 'Permite biopsia de mama asistida por sistema de vacío.', zh: '允许通过真空系统辅助进行乳房活检。', en: 'Allows vacuum-assisted breast biopsy.' },
+            'equipment-ct-title': { es: 'Tomógrafo GE Discovery Ct590 Rt', zh: '通用电气 Discovery Ct590 Rt 断层扫描仪', en: 'GE Discovery Ct590 Rt Tomograph' },
+            'equipment-ct-text': { es: 'Tomografía helicoidal multicorte, fundamental para diagnósticos precisos y planificación de radioterapia.', zh: '螺旋多层断层扫描，对于精确诊断和放射治疗计划至关重要。', en: 'Multislice helical tomography, essential for accurate diagnoses and radiotherapy planning.' },
+            'ct-li-1': { es: 'Reconstrucción Iterativa ASIR para reducción de dosis.', zh: 'ASIR迭代重建，以减少剂量。', en: 'ASIR Iterative Reconstruction for dose reduction.' },
+            'ct-li-2': { es: 'Software MAR para reducción de artefactos metálicos.', zh: 'MAR软件，用于减少金属伪影。', en: 'MAR software for metal artifact reduction.' },
+            'ct-li-3': { es: 'Túnel amplio de 80 cm y soporte de hasta 200 kg.', zh: '80 厘米宽的隧道，支持高达 200 公斤的重量。', en: 'Wide 80 cm tunnel and support for up to 200 kg.' },
+            'equipment-echograph-title': { es: 'Ecógrafo Arletta 65 Hitachi', zh: '日立 Arletta 65 超声波', en: 'Hitachi Arletta 65 Echograph' },
+            'equipment-echograph-text': { es: 'Equipo que proporciona un diagnóstico rápido y una excelente obtención de imágenes para diversas especialidades.', zh: '提供快速诊断和出色图像采集的设备，适用于各种专业领域。', en: 'Equipment that provides rapid diagnosis and excellent image acquisition for various specialties.' },
+            'echo-li-1': { es: 'Diseño ergonómico que reduce la fatiga del profesional.', zh: '符合人体工程学的设计，减少专业人员的疲劳。', en: 'Ergonomic design that reduces professional fatigue.' },
+            'echo-li-2': { es: 'Variedad de sondas para diferentes exploraciones.', zh: '各种探头，适用于不同的检查。', en: 'Variety of probes for different explorations.' },
+            'echo-li-3': { es: 'Ideal para ginecología, obstetricia, tiroides y más.', zh: '适用于妇科、产科、甲状腺等。', en: 'Ideal for gynecology, obstetrics, thyroid, and more.' },
+            'section-cyclotron-title': { es: 'Ciclotrón', zh: '回旋加速器', en: 'Cyclotron' },
+            'equipment-cyclotron-subtitle': { es: 'Healthcare PETracer 810', zh: '医疗保健 PETracer 810', en: 'Healthcare PETracer 810' },
+            'equipment-cyclotron-text': { es: 'La serie PETtrace 800 de GE Healthcare constituye un sistema ciclotrón compacto y automatizado de doble partícula, diseñado específicamente para la producción de radiofármacos utilizados en tomografía por emisión de positrones (PET). El núcleo del PETtrace 800 está basado en un ciclotrón de iones negativos con plano medio vertical y diseño comprobado, capaz de acelerar protones y deuterones. Esta característica proporciona versatilidad operativa y favorece la producción a bajo costo de múltiples isótopos. El sistema permite integrar distintos blancos y módulos de síntesis, lo que amplía el espectro de radioisótopos accesibles para aplicaciones clínicas y de investigación.Entre los isótopos que pueden obtenerse destacan el oxígeno-15, nitrógeno-13, carbono-11 y flúor-18, junto con diversos radionúclidos de blancos sólidos. Una vez producidos, los isótopos son transferidos automáticamente a los sistemas de síntesis química, donde se convierten de manera en trazadores PET y precursores farmacéuticos listos para su aplicación. Este nivel de integración asegura reproducibilidad, seguridad y trazabilidad en toda la cadena de producción radiofarmacéutica.', zh: '通用电气医疗的PETtrace 800系列是一款紧凑且自动化的双粒子回旋加速器系统，专为生产用于正电子发射断层扫描（PET）的放射性药物而设计。PETtrace 800的核心基于经过验证的垂直中平面设计的负离子回旋加速器，能够加速质子和氘核。这一特点提供了操作的多功能性，并有助于以低成本生产多种同位素。该系统可以集成不同的靶标和合成模块，从而扩大了可用于临床和研究应用的放射性同位素范围。可以获得的同位素包括氧-15、氮-13、碳-11和氟-18，以及各种固体靶核素。一旦生产出来，这些同位素就会自动转移到化学合成系统，在那里它们被转化为PET示踪剂和现成的药用前体。这种集成水平确保了整个放射性药物生产链中的可重复性、安全性和可追溯性。', en: 'The GE Healthcare PETtrace 800 series is a compact and automated dual-particle cyclotron system, specifically designed for the production of radiopharmaceuticals used in positron emission tomography (PET). The core of the PETtrace 800 is based on a proven vertical mid-plane negative ion cyclotron design, capable of accelerating both protons and deuterons. This feature provides operational versatility and enables the low-cost production of multiple isotopes. The system allows for the integration of different targets and synthesis modules, which expands the range of radioisotopes accessible for clinical and research applications. Isotopes that can be obtained include oxygen-15, nitrogen-13, carbon-11, and fluorine-18, along with various solid-target radionuclides. Once produced, the isotopes are automatically transferred to chemical synthesis systems, where they are converted into PET tracers and pharmaceutical precursors ready for application. This level of integration ensures reproducibility, safety, and traceability throughout the entire radiopharmaceutical production chain.' },
+            'equipment-cyclotron-image-alt': { es: 'Imagen de un Ciclotrón', zh: '回旋加速器的图片', en: 'Image of a Cyclotron' },
+            'section-reps-title': { es: 'Representantes', zh: '代表', en: 'Representatives' },
+            'reps-intro': { es: 'Conoce a nuestro equipo de representantes, dedicados a la excelencia.', zh: '认识我们的团队代表，他们致力于追求卓越。', en: 'Meet our team of representatives, dedicated to excellence.' },
+            'rep-martin-name': { es: 'Martín Mutuberria', zh: '马丁·穆图贝里亚', en: 'Martín Mutuberria' },
+            'rep-martin-role': { es: 'Gerente General', zh: '总经理', en: 'General Manager' },
+            'rep-gabriel-name': { es: 'Gabriel Martinez', zh: '加布里埃尔·马丁内斯', en: 'Gabriel Martinez' },
+            'rep-gabriel-role': { es: 'Ingeniero Civil', zh: '土木工程师', en: 'Civil Engineer' },
+            'rep-lucas-name': { es: 'Lucas Dordolo', zh: '卢卡斯·多尔多洛', en: 'Lucas Dordolo' },
+            'rep-lucas-role': { es: 'Ingeniero Electrónico', zh: '电子工程师', en: 'Electronic Engineer' },
+            'section-contact-title': { es: 'Contacto', zh: '联系', en: 'Contact' },
+            'contact-intro': { es: 'Estamos aquí para ayudarte. Ponte en contacto con nosotros.', zh: '我们在这里为您提供帮助。请与我们联系。', en: 'We are here to help you. Get in touch with us.' },
+            'contact-phones-title': { es: 'Teléfonos:', zh: '电话:', en: 'Phones:' },
+            'contact-general-label': { es: 'General:', zh: '总机:', en: 'General:' },
+            'contact-email-title': { es: 'Correo Electrónico:', zh: '电子邮件:', en: 'Email:' },
+            'contact-email-text': { es: 'contacto@cemenurnk.org.ar', zh: 'contacto@cemenurnk.org.ar', en: 'contact@cemenurnk.org.ar' },
+            'contact-address-title': { es: 'Dirección:', zh: '地址:', en: 'Address:' },
+            'contact-address-text': { es: 'Corrientes 1849, Formosa Capital, Argentina', zh: 'Corrientes 1849, Formosa Capital, Argentina', en: 'Corrientes 1849, Formosa Capital, Argentina' },
+            'contact-web-title': { es: 'Página Web:', zh: '网站:', en: 'Website:' },
+            'contact-web-text': { es: 'www.cemenurnk.org.ar', zh: 'www.cemenurnk.org.ar', en: 'www.cemenurnk.org.ar' },
+            'footer-text': { es: '&copy; 2024 CEMENURNK. Todos los derechos reservados.', zh: '&copy; 2024 CEMENURNK. 版权所有。', en: '&copy; 2024 CEMENURNK. All rights reserved.' },
+            'map-src': {
+                es: 'https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d1229.8480119359995!2d-58.188400026512866!3d-26.181591515521166!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x945ca5f7990ef97f%3A0x862b210f90e0cca6!2sCentro%20De%20Medicina%20Nuclear%20Y%20Radioterapia!5e0!3m2!1ses-419!2sar!4v1757344888818!5m2!1ses-419!2sar',
+                zh: 'https://map.baidu.com/@-6477573,-3002576,19z',
+                en: 'https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3596.160100062483!2d-58.18839958497677!3d-26.18159158342416!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x945ca5f7990ef97f%3A0x862b210f90e0cca6!2sCentro%20De%20Medicina%20Nuclear%20Y%20Radioterapia!5e0!3m2!1sen!2sar!4v1757344888818!5m2!1sen!2sar'
+            },
+            'carousel-images': {
+                es: [
+                    { src: '/media/centro 2.jpeg', alt: 'Vista aérea del edificio'},
+                    { src: '/media/Vista AEREA 6.jpg', alt: 'Vista aérea del edificio'},
+                    { src: '/media/versa.jpg', alt: 'Acelerador Elekta VERSA HD'},
+                    { src: '/media/synergy.jpg', alt: 'Acelerador Elekta SYNERGY PLATFORM'},
+                    { src: '/media/afterloader.jpg', alt: 'Equipo de Braquiterapia'},
+                    { src: '/media/Tomógrafo 1.jpg', alt: 'Tomógrafo GE Discovery Ct590 Rt'}
+                ],
+                zh: [
+                    { src: '/media/centro 2.jpeg', alt: '医院大楼鸟瞰图'},
+                    { src: '/media/Vista AEREA 6.jpg', alt: '医院大楼鸟瞰图'},
+                    { src: '/media/versa.jpg', alt: 'Elekta VERSA HD 加速器'},
+                    { src: '/media/synergy.jpg', alt: 'Elekta SYNERGY PLATFORM 加速器'},
+                    { src: '/media/afterloader.jpg', alt: '近距治疗设备'},
+                    { src: '/media/Tomógrafo 1.jpg', alt: 'GE Discovery Ct590 Rt 断层扫描仪'}
+                ], 
+                en: [
+                    { src: '/media/centro 2.jpeg', alt: 'Aerial view of the building'},
+                    { src: '/media/Vista AEREA 6.jpg', alt: 'Aerial view of the building'},
+                    { src: '/media/versa.jpg', alt: 'Elekta VERSA HD Accelerator'},
+                    { src: '/media/synergy.jpg', alt: 'Elekta SYNERGY PLATFORM Accelerator'},
+                    { src: '/media/afterloader.jpg', alt: 'Brachytherapy Equipment'},
+                    { src: '/media/Tomógrafo 1.jpg', alt: 'GE Discovery Ct590 Rt Tomograph'}
+                ]
+            }
+        };
+
+        const elementsToTranslate = document.querySelectorAll('[data-key]');
+        const langToggleBtn = document.getElementById('lang-toggle');
+        const languages = ['es', 'en', 'zh'];
+        let currentLangIndex = -1; // -1 indicates initial detection is needed
+
+        function getInitialLanguage() {
+            const userLang = navigator.language || navigator.userLanguage;
+            if (userLang.startsWith('zh')) {
+                return 'zh';
+            } else if (userLang.startsWith('es')) {
+                return 'es';
+            } else {
+                return 'en';
+            }
+        }
+
+        function updateLanguage(lang) {
+            const newLang = lang || languages[currentLangIndex];
+            elementsToTranslate.forEach(element => {
+                const key = element.getAttribute('data-key');
+                const translation = translations[key];
+                if (translation && translation[newLang]) {
+                    if (element.tagName === 'IFRAME') {
+                        element.src = translation[newLang];
+                    } else if (element.tagName === 'IMG') {
+                        element.alt = translation[newLang];
+                    } else if (translation[newLang].includes('<')) {
+                        element.innerHTML = translation[newLang];
+                    } else {
+                        element.textContent = translation[newLang];
+                    }
+                }
+            });
+
+            // Update button text and HTML lang attribute
+            document.documentElement.lang = newLang;
+            const nextLangIndex = (languages.indexOf(newLang) + 1) % languages.length;
+            const nextLang = languages[nextLangIndex];
+            const flags = { 'es': '🇪🇸', 'en': '🇬🇧', 'zh': '🇨🇳' };
+            langToggleBtn.textContent = flags[nextLang];
+            
+            updateCarouselImages(newLang);
+        }
+        
+        // Carousel logic
+        const carousel = document.getElementById('hero-carousel');
+        const carouselInner = carousel.querySelector('.carousel-inner');
+        const carouselDotsContainer = carousel.querySelector('.carousel-dots');
+        let currentIndex = 0;
+        let carouselInterval;
+
+        function renderCarouselImages(images) {
+            carouselInner.innerHTML = '';
+            carouselDotsContainer.innerHTML = '';
+            images.forEach((img, index) => {
+                const imgElement = document.createElement('img');
+                imgElement.src = img.src;
+                imgElement.alt = img.alt;
+                imgElement.className = 'carousel-item absolute top-0 left-0 w-full h-full object-cover rounded-xl';
+                imgElement.onerror = () => imgElement.src = 'https://placehold.co/800x400'; // Fallback
+                carouselInner.appendChild(imgElement);
+
+                const dotElement = document.createElement('div');
+                dotElement.className = 'carousel-dot';
+                dotElement.addEventListener('click', () => {
+                    clearInterval(carouselInterval);
+                    currentIndex = index;
+                    showImage(currentIndex);
+                    startCarousel();
+                });
+                carouselDotsContainer.appendChild(dotElement);
+            });
+            showImage(currentIndex);
+            startCarousel();
+        }
+
+        function showImage(index) {
+            const images = carouselInner.querySelectorAll('img');
+            const dots = carouselDotsContainer.querySelectorAll('.carousel-dot');
+            images.forEach(img => img.classList.remove('active'));
+            dots.forEach(dot => dot.classList.remove('active'));
+            images[index].classList.add('active');
+            dots[index].classList.add('active');
+        }
+
+        function nextImage() {
+            const totalImages = carouselInner.children.length;
+            currentIndex = (currentIndex + 1) % totalImages;
+            showImage(currentIndex);
+        }
+
+        function startCarousel() {
+            carouselInterval = setInterval(nextImage, 5000); // Change image every 5 seconds
+        }
+        
+        function updateCarouselImages(lang) {
+            const imagesForCurrentLang = translations['carousel-images'][lang];
+            renderCarouselImages(imagesForCurrentLang);
+        }
+
+        langToggleBtn.addEventListener('click', () => {
+            currentLangIndex = (currentLangIndex + 1) % languages.length;
+            updateLanguage(languages[currentLangIndex]);
+        });
+        
+        // Set default language on page load
+        window.addEventListener('load', () => {
+            const initialLang = getInitialLanguage();
+            currentLangIndex = languages.indexOf(initialLang);
+            updateLanguage(initialLang);
+        });
+
+        window.addEventListener("beforeunload", ()=>{
+            clearInterval(carouselInterval)
+        })
+    </script>
+</body>
+</html>
