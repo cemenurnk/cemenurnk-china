@@ -632,6 +632,7 @@
         }
         
         function updateCarouselImages(lang) {
+            clearInterval(carouselInterval)
             const imagesForCurrentLang = translations['carousel-images'][lang];
             renderCarouselImages(imagesForCurrentLang);
         }
